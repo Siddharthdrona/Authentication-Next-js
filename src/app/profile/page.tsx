@@ -64,11 +64,7 @@ export default function ProfilePage() {
           ) : (
             <Link
               href={`/profile/${data}`}
-              className="
-              text-yellow-500
-              font-semibold
-              hover:underline
-              "
+              className="  text-yellow-500 font-semibold hover:underline "
             >
               {data}
             </Link>
@@ -79,18 +75,7 @@ export default function ProfilePage() {
 
         <button
           onClick={getUserDetails}
-          className="
-      w-full
-      mt-6
-      py-3
-      rounded-xl
-      bg-orange-500
-      hover:bg-orange-600
-      text-white
-      font-semibold
-      transition
-      shadow-lg
-      "
+          className=" w-full mt-6 py-3 rounded-xl  bg-orange-500  hover:bg-orange-600  text-white font-semibold transition shadow-lg "
         >
           Get User Details
         </button>
@@ -99,18 +84,7 @@ export default function ProfilePage() {
 
         <button
           onClick={logout}
-          className="
-      w-full
-      mt-4
-      py-3
-      rounded-xl
-      bg-blue-600
-      hover:bg-blue-700
-      text-white
-      font-semibold
-      transition
-      shadow-lg
-      "
+          className=" w-full mt-4 py-3 rounded-xl  bg-blue-600  hover:bg-blue-700  text-white font-semibold transition shadow-lg "
         >
           Logout
         </button>
