@@ -14,8 +14,8 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
         verifyTokenExpiry: Date.now() + 3600000,
       });
     }
-      // Resetting Password
-     else if (emailType === "RESET") {
+    // Resetting Password
+    else if (emailType === "RESET") {
       await User.findByIdAndUpdate(userId, {
         forgotPasswordToken: hashedToken,
         forgotPasswordTokenExpiry: Date.now() + 3600000,
@@ -31,19 +31,32 @@ export const sendEmail = async ({ email, emailType, userId }: any) => {
       },
     });
 
-    const mailOptions = {
-      from: 'siddudrona@gmail.com',
-      to: email,
-      subject: emailType === "VERIFY" ? "Verify your email" : "Reset your password",
-      html: `<p>Click <a href="${process.env.DOMAIN}/verifyemail?token=${hashedToken}">here</a> to ${emailType === "VERIFY" ? "verify your email":"reset your password"}
-      or copy and paste the link below in your browser. <br> ${process.env.DOMAIN}/verifyemail?token=${hashedToken}
-      </p>`
-    }
+    const resetUrl = `${process.env.DOMAIN}${
+      emailType === "VERIFY"
+        ? `/verifyemail?token=${hashedToken}`
+        : `/resetpassword?token=${hashedToken}`
+    }`;
 
-    const mailresponse = await transport.sendMail(mailOptions)
+    const mailOptions = {
+      from: "siddudrona@gmail.com",
+      to: email,
+      subject:
+        emailType === "VERIFY" ? "Verify your email" : "Reset your password",
+      html: `
+    <p>
+      ${emailType === "VERIFY" ? "Verify your email" : "Reset your password"}
+    </p>
+    <p>
+      Copy and paste this link in your browser:
+    </p>
+    <p>
+      ${resetUrl}
+    </p>`,
+    };
+
+    const mailresponse = await transport.sendMail(mailOptions);
 
     return mailresponse;
-
   } catch (error: any) {
     throw new Error(error.message);
   }
