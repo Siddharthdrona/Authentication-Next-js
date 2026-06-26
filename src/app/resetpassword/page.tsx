@@ -48,7 +48,7 @@ export default function ResetPasswordPage() {
           placeholder="New Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-3 rounded-xl mb-4"
+          className="w-full p-3 rounded-xl mb-4 border"
         />
 
         <input
@@ -56,7 +56,7 @@ export default function ResetPasswordPage() {
           placeholder="Confirm Password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="w-full p-3 rounded-xl mb-5"
+          className="w-full p-3 rounded-xl mb-5 border"
         />
 
         <button
