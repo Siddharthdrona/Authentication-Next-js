@@ -5,7 +5,11 @@ export function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   const isPublicPath =
-    path === "/login" || path === "/signup" || path === "/verifyemail";
+  path === "/login" ||
+  path === "/signup" ||
+  path === "/verifyemail" ||
+  path === "/forgotpassword" ||
+  path === "/resetpassword";
 
   const token = request.cookies.get("token")?.value || "";
 
@@ -30,13 +34,13 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher:[
+  matcher: [
     "/",
     "/login",
     "/signup",
     "/verifyemail",
-    "/resetpassword",
     "/forgotpassword",
+    "/resetpassword",
     "/profile/:path*"
   ],
 };
