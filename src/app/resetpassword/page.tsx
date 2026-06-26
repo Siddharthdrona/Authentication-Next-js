@@ -1,82 +1,82 @@
 "use client";
 
 import axios from "axios";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 export default function ResetPasswordPage() {
-  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [token, setToken] = useState("");
+  const token = searchParams.get("token");
+
   const [password, setPassword] = useState("");
+
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [success, setSuccess] = useState(false);
+
+  const [message, setMessage] = useState("");
+
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const urlToken = window.location.search.split("=")[1];
-
-    setToken(urlToken || "");
-  }, []);
-
   const resetPassword = async () => {
-    try {
-      if (password !== confirmPassword) {
-        setError("Passwords do not match");
-        return;
-      }
+    setMessage("");
 
-      await axios.post("/api/users/resetpassword", {
+    setError("");
+
+    if (!password || !confirmPassword) {
+      setError("Please fill all fields");
+
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+
+      return;
+    }
+
+    try {
+      const response = await axios.post("/api/users/resetpassword", {
         token,
         password,
       });
 
-      setSuccess(true);
-    } catch (error: any) {
-      setError(error.response?.data?.error || "Something went wrong");
+      setMessage(response.data.message);
+    } catch (err: any) {
+      setError(err.response?.data?.error || "Something went wrong");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-900 via-blue-900 to-black px-4">
-      <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-3xl w-full max-w-md text-center">
-        <h1 className="text-white text-3xl font-bold mb-6">Reset Password</h1>
+    <div className="min-h-screen flex items-center justify-center bg-slate-900">
+      <div className="bg-white/10 backdrop-blur-xl p-8 rounded-3xl w-full max-w-md">
+        <h1 className="text-white text-3xl font-bold mb-5">Reset Password</h1>
 
         <input
           type="password"
-          placeholder="New Password"
+          placeholder="New password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-3 rounded-xl mb-4 border"
+          className="w-full p-3 rounded mb-4 border"
         />
 
         <input
           type="password"
-          placeholder="Confirm Password"
+          placeholder="Confirm password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="w-full p-3 rounded-xl mb-5 border"
+          className="w-full p-3 rounded mb-4 border"
         />
 
         <button
           onClick={resetPassword}
-          className="bg-blue-600 text-white px-6 py-3 rounded-xl w-full"
+          className="bg-blue-600 text-white px-5 py-3 rounded-xl w-full"
         >
           Change Password
         </button>
 
-        {success && (
-          <div className="mt-5 bg-green-500/20 p-4 rounded-xl">
-            <h2 className="text-green-400 text-xl">Password Updated 🎉</h2>
+        {message && <p className="text-green-400 mt-4">{message}</p>}
 
-            <Link href="/login" className="text-blue-400">
-              Go to Login
-            </Link>
-          </div>
-        )}
-
-        {error && <p className="text-red-400 mt-5">{error}</p>}
+        {error && <p className="text-red-400 mt-4">{error}</p>}
       </div>
     </div>
   );
