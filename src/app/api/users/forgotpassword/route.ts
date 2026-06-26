@@ -1,7 +1,7 @@
 import { connect } from "@/dbConfig/dbConfig";
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
+import { sendEmail } from "@/helpers/mailer";
 
 connect();
 
@@ -33,20 +33,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const resetToken = await bcrypt.hash(user._id.toString(), 10);
+    await sendEmail({
+      email: user.email,
 
-    user.forgotPasswordToken = resetToken;
+      emailType: "RESET",
 
-    user.forgotPasswordTokenExpiry = Date.now() + 3600000;
-
-    await user.save();
-
-    // send email here
+      userId: user._id,
+    });
 
     return NextResponse.json({
       message: "Reset email sent",
     });
-  } catch (error: any) {
+  } 
+  
+  catch (error: any) {
     return NextResponse.json(
       {
         error: error.message,
