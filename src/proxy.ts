@@ -36,7 +36,6 @@ export const config = {
     "/signup",
     "/verifyemail",
     "/forgotpassword",
-    "/resetpassword",
     "/profile/:path*"
   ],
 };
