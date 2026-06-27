@@ -22,7 +22,6 @@ export async function POST(request: NextRequest) {
 
     const user = await User.findOne({
       forgotPasswordToken: token,
-
       forgotPasswordTokenExpiry: {
         $gt: Date.now(),
       },
@@ -43,15 +42,14 @@ export async function POST(request: NextRequest) {
 
     user.password = hashedPassword;
 
-    user.forgotPasswordToken = undefined;
+    user.forgotPasswordToken = null;
 
-    user.forgotPasswordTokenExpiry = undefined;
+    user.forgotPasswordTokenExpiry = null;
 
     await user.save();
 
     return NextResponse.json({
       message: "Password changed successfully",
-
       success: true,
     });
   } catch (error: any) {
@@ -59,7 +57,6 @@ export async function POST(request: NextRequest) {
       {
         error: error.message,
       },
-
       {
         status: 500,
       },
